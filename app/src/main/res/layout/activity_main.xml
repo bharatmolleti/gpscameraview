@@ -21,4 +21,35 @@
         android:layout_alignParentTop="true"
         android:visibility="visible"
         android:text="" />
+
+    <EditText
+        android:id="@+id/editTextlat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:visibility="invisible"
+        android:text="17.5211" />
+
+    <EditText
+        android:id="@+id/editTextlong"
+        android:layout_below="@id/editTextlat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:visibility="invisible"
+        android:text="78.4195" />
+
+    <EditText
+        android:id="@+id/editTextDist"
+        android:layout_below="@id/editTextlong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:visibility="invisible"
+        android:text="5" />
 </RelativeLayout>

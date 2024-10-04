@@ -6,8 +6,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.util.Size
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -26,7 +31,9 @@ class MainActivity : AppCompatActivity() {
     var isWithinRange = false
     public var currentLocation = ""
     private lateinit var sharedPref: SharedPreferences
-
+    private lateinit var editTextLat: EditText
+    private lateinit var editTextLong: EditText
+    private lateinit var editTextDist: EditText
     /*
 
      Current 17.5211137, 78.4195162
@@ -42,9 +49,9 @@ class MainActivity : AppCompatActivity() {
  Current 17.5211144, 78.4195148
      */
     // Coordinates for the specific GPS range
-    private val targetLatitude = 17.5211 // Example latitude
-    private val targetLongitude = 78.4195// Example longitude
-    private val gpsThresholdMeters = 5.0 // Accuracy threshold in meters
+    private var targetLatitude = 17.5211 // Example latitude
+    private var targetLongitude = 78.4195// Example longitude
+    private var gpsThresholdMeters = 5.0 // Accuracy threshold in meters
 
     public var debugEnabled = false //
 
@@ -71,13 +78,66 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         sharedPref = this.getPreferences(Context.MODE_PRIVATE)
         cameraPreview = findViewById(R.id.cameraPreview)
         overlayView = findViewById(R.id.overlay);
+        editTextLat = findViewById(R.id.editTextlat);
+        editTextLat.setText(targetLatitude.toString())
+        editTextLat.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val value = s?.toString()?.toDouble();
+            if (value != null && value != targetLatitude) {
+                targetLatitude = value;
+            }
+        }});
+        editTextLong = findViewById(R.id.editTextlong);
+        editTextLong.setText(targetLongitude.toString())
+        editTextLong.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val value = s?.toString()?.toDouble();
+                if (value != null && value != targetLongitude) {
+                    targetLongitude = value;
+                }
+            }});
+        editTextDist = findViewById(R.id.editTextDist);
+        editTextDist.setText(gpsThresholdMeters.toString())
+        editTextDist.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val value = s?.toString()?.toDouble();
+                if (value != null && value != gpsThresholdMeters) {
+                    gpsThresholdMeters = value;
+                }
+            }});
         switch = findViewById(R.id.switch1);
         switch.setOnCheckedChangeListener{_, checked ->
             debugEnabled = checked;
+            if (checked) editTextLat.visibility = View.VISIBLE;
+            else editTextLat.visibility = View.INVISIBLE;
+            editTextLong.visibility = if(checked) View.VISIBLE else View.INVISIBLE;
+            editTextDist.visibility = if(checked) View.VISIBLE else View.INVISIBLE;
         }
 
         // Initialize location services

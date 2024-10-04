@@ -25,12 +25,14 @@ class OverlayView(context: Context, attrs: AttributeSet?) : View(context, attrs)
 
         val activity = context as MainActivity
         if (activity.debugEnabled) {
-            canvas.drawText(activity.currentLocation, 10f, 30f, paintRed);
+            canvas.drawText(activity.currentLocation, 10f, height.toFloat() - paintRed.textSize - 30f, paintRed);
         }
+        val drawHeight = (height.toFloat()/2.0f);
+        val offset = 100f;
         if (activity.isWithinRange) {
             // Draw two lines if within range
-            canvas.drawLine(0f, 100f, width.toFloat(), 100f, paintGreen)
-            canvas.drawLine(0f, 200f, width.toFloat(), 200f, paintYellow)
+            canvas.drawLine(0f, drawHeight- offset/2, width.toFloat(), drawHeight - offset/2, paintGreen)
+            canvas.drawLine(0f, drawHeight + offset/2, width.toFloat(), drawHeight + offset/2, paintYellow)
         }
     }
 }
